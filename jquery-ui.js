@@ -16564,10 +16564,15 @@ var widgetsSortable = $.widget( "ui.sortable", $.ui.mouse, {
 	},
 
 	_rearrange: function( event, i, a, hardRefresh ) {
-
-		a ? a[ 0 ].appendChild( this.placeholder[ 0 ] ) :
-			i.item[ 0 ].parentNode.insertBefore( this.placeholder[ 0 ],
-				( this.direction === "down" ? i.item[ 0 ] : i.item[ 0 ].nextSibling ) );
+              //fixing issue in jquery where you cant drop an item to the end of the grid
+              //check if the element is the last child of the list then add placeholder to the end of the list
+	    if (i.item[0].parentNode.lastElementChild == i.item[0]) {
+	        a ? a[0].appendChild(this.placeholder[0]) : i.item[0].parentNode.insertBefore(this.placeholder[0], i.item[0].nextSibling);
+	        // a ? a[0].appendChild(this.placeholder[0]) : i.item[0].parentNode.insertBefore(this.placeholder[0], null);
+	        // insert before with NULL will add the item to the end of the list
+	    } else {
+	        a? a[0].appendChild(this.placeholder[0]): i.item[0].parentNode.insertBefore(this.placeholder[0],(this.direction === "down" ? i.item[0] : i.item[0].nextSibling));
+	    }
 
 		//Various things done here to improve the performance:
 		// 1. we create a setTimeout, that calls refreshPositions
